@@ -812,7 +812,22 @@ function downloadCard() {
   const personality = document.getElementById("personality").value || DEFAULT_PERSONALITIES[d.species] || "";
   const rc = RARITY_COLORS[d.rarity];
 
-  const W = 680, H = 920, M = 24, S = 2;
+  // Match the web card dimensions (400px card width)
+  const W = 420, M = 16, S = 2;
+  // Pre-calculate height dynamically
+  let preH = M + 38; // top padding + rarity line
+  if (d.shiny) preH += 22;
+  const artCount = BODIES[d.species].length + (d.hat !== 'none' ? 1 : 0);
+  preH += 8 + artCount * 26 + 12; // art
+  preH += 28; // name
+  if (personality) {
+    const estLines = Math.ceil((`"${personality}"`).length / 38);
+    preH += estLines * 18 + 8;
+  }
+  preH += 5 * 28 + 14; // stats
+  preH += 30; // footer + bottom padding
+  const H = preH;
+
   const canvas = document.createElement("canvas");
   canvas.width = W * S; canvas.height = H * S;
   const ctx = canvas.getContext("2d");
@@ -864,112 +879,112 @@ function downloadCard() {
   ctx.lineWidth = d.rarity === "legendary" || d.rarity === "epic" ? 3 : d.rarity === "rare" ? 2 : 1;
   ctx.stroke();
 
-  let y = M + 50;
+  let y = M + 34;
 
   // Rarity badge
-  ctx.font = "bold 18px 'JetBrains Mono', monospace";
+  ctx.font = "bold 13px 'JetBrains Mono', monospace";
   ctx.fillStyle = rc.color;
   ctx.textBaseline = "middle";
-  ctx.fillText(`${RARITY_STARS[d.rarity]} ${d.rarity.toUpperCase()}`, M + 30, y);
+  ctx.fillText(`${RARITY_STARS[d.rarity]} ${d.rarity.toUpperCase()}`, M + 20, y);
 
   // Species (right)
-  ctx.font = "bold 14px 'Inter', sans-serif";
+  ctx.font = "bold 12px 'Inter', sans-serif";
   ctx.fillStyle = "#b4befe";
   const spText = d.species.toUpperCase();
   const spW = ctx.measureText(spText).width;
-  ctx.fillText(spText, W - M - 30 - spW, y);
-  y += 35;
+  ctx.fillText(spText, W - M - 20 - spW, y);
+  y += 24;
 
   // Shiny
   if (d.shiny) {
-    ctx.font = "bold 14px 'JetBrains Mono', monospace";
-    ctx.fillStyle = "#fab387";
+    ctx.font = "bold 12px 'JetBrains Mono', monospace";
+    ctx.fillStyle = "#c89e50";
     const shinyText = "~ SHINY ~";
     const shW = ctx.measureText(shinyText).width;
     ctx.fillText(shinyText, (W - shW) / 2, y);
-    y += 30;
+    y += 22;
   }
 
   // ASCII art
-  ctx.font = "22px 'JetBrains Mono', Menlo, monospace";
+  ctx.font = "17px 'JetBrains Mono', Menlo, monospace";
   ctx.fillStyle = "#cdd6f4";
   let artLines = BODIES[d.species].map(l => l.replaceAll("{E}", d.eye));
   if (d.hat !== "none" && HAT_LINES[d.hat]) {
     artLines = [HAT_LINES[d.hat], ...artLines];
   }
-  y += 10;
+  y += 8;
   for (const line of artLines) {
     const lw = ctx.measureText(line).width;
     ctx.fillText(line, (W - lw) / 2, y);
-    y += 32;
+    y += 26;
   }
-  y += 15;
+  y += 12;
 
   // Name
-  ctx.font = "bold 28px 'Inter', sans-serif";
+  ctx.font = "bold 22px 'Inter', sans-serif";
   ctx.fillStyle = d.rarity === "legendary" ? "#f9e2af" : "#ffffff";
-  ctx.fillText(petName, M + 40, y);
-  y += 35;
+  ctx.fillText(petName, M + 24, y);
+  y += 28;
 
   // Personality (word wrap)
   if (personality) {
-    ctx.font = "italic 14px 'Inter', sans-serif";
+    ctx.font = "italic 11px 'Inter', sans-serif";
     ctx.fillStyle = "#9399b2";
     const quote = `"${personality}"`;
     const words = quote.split(" ");
     let line = "";
-    const maxW = W - 2 * M - 80;
+    const maxW = W - 2 * M - 48;
     for (const w of words) {
       const test = line ? line + " " + w : w;
       if (ctx.measureText(test).width > maxW && line) {
-        ctx.fillText(line, M + 40, y);
-        y += 22;
+        ctx.fillText(line, M + 24, y);
+        y += 18;
         line = w;
       } else {
         line = test;
       }
     }
-    if (line) { ctx.fillText(line, M + 40, y); y += 22; }
+    if (line) { ctx.fillText(line, M + 24, y); y += 18; }
   }
-  y += 18;
+  y += 14;
 
   // Stats
-  const BAR_X = M + 160, BAR_W = 280, BAR_H = 18;
+  const BAR_X = M + 100, BAR_W = 190, BAR_H = 14;
   ctx.textBaseline = "middle";
   for (const [stat, value] of Object.entries(d.stats)) {
     const isPeak = stat === d.peak;
     const isDump = stat === d.dump;
 
     // Label
-    ctx.font = "13px 'JetBrains Mono', monospace";
+    ctx.font = "11px 'JetBrains Mono', monospace";
     ctx.fillStyle = isPeak ? rc.color : isDump ? "#585b70" : "#a6adc8";
     ctx.textAlign = "right";
-    ctx.fillText(stat, BAR_X - 12, y + BAR_H / 2);
+    ctx.fillText(stat, BAR_X - 10, y + BAR_H / 2);
     ctx.textAlign = "left";
 
     // Bar bg
-    roundRect(BAR_X, y, BAR_W, BAR_H, 4);
+    roundRect(BAR_X, y, BAR_W, BAR_H, 3);
     ctx.fillStyle = "#2a2a3c";
     ctx.fill();
 
     // Bar fill
     const fw = Math.round(BAR_W * value / 100);
     if (fw > 0) {
-      roundRect(BAR_X, y, fw, BAR_H, 4);
+      roundRect(BAR_X, y, fw, BAR_H, 3);
       ctx.fillStyle = isPeak ? rc.color : "#7aa2ec";
       ctx.fill();
     }
 
     // Value
-    ctx.font = "13px 'JetBrains Mono', monospace";
+    ctx.font = "11px 'JetBrains Mono', monospace";
     ctx.fillStyle = isPeak ? rc.color : "#cdd6f4";
-    ctx.fillText(String(value), BAR_X + BAR_W + 12, y + BAR_H / 2);
-    y += 34;
+    ctx.fillText(String(value), BAR_X + BAR_W + 10, y + BAR_H / 2);
+    y += 28;
   }
 
   // Footer
-  y += 12;
-  ctx.font = "12px 'JetBrains Mono', monospace";
+  y += 8;
+  ctx.font = "10px 'JetBrains Mono', monospace";
   ctx.fillStyle = "#6c7086";
   ctx.textAlign = "center";
   ctx.fillText(`eye:${EYES_MAP[d.eye]||d.eye} · hat:${d.hat}${d.shiny?" · SHINY":""} · ${RARITY_WEIGHTS[d.rarity]}% chance`, W/2, y);
