@@ -812,8 +812,8 @@ function downloadCard() {
 
   // Card fill
   const bgMap = {
-    legendary: "#2d2520", epic: "#251e2d", rare: "#1e2430",
-    uncommon: "#1e2920", common: "#1e1e2e"
+    legendary: "#2a2218", epic: "#221a2a", rare: "#1a2230",
+    uncommon: "#1a2518", common: "#1e1e2e"
   };
   roundRect(M, M, W-2*M, H-2*M, 14);
   ctx.fillStyle = bgMap[d.rarity];
@@ -825,7 +825,7 @@ function downloadCard() {
   let y = M + 50;
 
   // Rarity badge
-  ctx.font = "bold 16px 'JetBrains Mono', monospace";
+  ctx.font = "bold 18px 'JetBrains Mono', monospace";
   ctx.fillStyle = rc.color;
   ctx.textBaseline = "middle";
   ctx.fillText(`${RARITY_STARS[d.rarity]} ${d.rarity.toUpperCase()}`, M + 30, y);
@@ -907,14 +907,14 @@ function downloadCard() {
 
     // Bar bg
     roundRect(BAR_X, y, BAR_W, BAR_H, 4);
-    ctx.fillStyle = "#313244";
+    ctx.fillStyle = "#2a2a3c";
     ctx.fill();
 
     // Bar fill
     const fw = Math.round(BAR_W * value / 100);
     if (fw > 0) {
       roundRect(BAR_X, y, fw, BAR_H, 4);
-      ctx.fillStyle = isPeak ? rc.color : "#89b4fa";
+      ctx.fillStyle = isPeak ? rc.color : "#7aa2ec";
       ctx.fill();
     }
 
@@ -928,7 +928,7 @@ function downloadCard() {
   // Footer
   y += 12;
   ctx.font = "12px 'JetBrains Mono', monospace";
-  ctx.fillStyle = "#45475a";
+  ctx.fillStyle = "#6c7086";
   ctx.textAlign = "center";
   ctx.fillText(`eye:${EYES_MAP[d.eye]||d.eye} · hat:${d.hat}${d.shiny?" · SHINY":""} · ${RARITY_WEIGHTS[d.rarity]}% chance`, W/2, y);
   ctx.textAlign = "left";
