@@ -806,7 +806,7 @@ function downloadCard() {
   const rc = RARITY_COLORS[d.rarity];
 
   // Match the web card dimensions
-  const W = 420, M = 16, S = 2;
+  const W = 400, M = 14, S = 2;
   // First pass: draw to oversized canvas to measure actual content height
   const tmpCanvas = document.createElement("canvas");
   tmpCanvas.width = W * S; tmpCanvas.height = 800 * S;
@@ -854,13 +854,12 @@ function _drawCard(ctx, d, petName, personality, rc, W, H, M) {
     return `rgba(${r},${g},${b},${alpha})`;
   }
 
-  // Glow for rare+
+  // Subtle glow for rare+
   if (["rare","epic","legendary"].includes(d.rarity)) {
-    const alphas = [0.12, 0.18, 0.25, 0.35];
-    for (let i = 4; i > 0; i--) {
-      ctx.strokeStyle = hexToRgba(rc.color, alphas[4-i]);
-      ctx.lineWidth = 2;
-      roundRect(M-i*2, M-i*2, W-2*M+i*4, H-2*M+i*4, 16);
+    for (let i = 3; i > 0; i--) {
+      ctx.strokeStyle = hexToRgba(rc.color, 0.08 + i * 0.04);
+      ctx.lineWidth = 1;
+      roundRect(M-i, M-i, W-2*M+i*2, H-2*M+i*2, 15);
       ctx.stroke();
     }
   }
@@ -879,7 +878,7 @@ function _drawCard(ctx, d, petName, personality, rc, W, H, M) {
   ctx.fillStyle = grad;
   ctx.fill();
   ctx.strokeStyle = rc.color;
-  ctx.lineWidth = d.rarity === "legendary" || d.rarity === "epic" ? 3 : d.rarity === "rare" ? 2 : 1;
+  ctx.lineWidth = 1;
   ctx.stroke();
 
   let y = M + 34;
