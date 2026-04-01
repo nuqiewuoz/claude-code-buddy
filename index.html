@@ -249,35 +249,26 @@
   .stats {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
   }
   .stat-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-  }
-  .stat-label {
+    gap: 8px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
-    width: 100px;
+    line-height: 1;
+  }
+  .stat-label {
+    width: 90px;
     text-align: right;
     flex-shrink: 0;
   }
-  .stat-bar-bg {
-    flex: 1;
-    height: 16px;
-    background: #313244;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .stat-bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.6s ease;
+  .stat-bar {
+    flex-shrink: 0;
+    letter-spacing: -1px;
   }
   .stat-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
     width: 28px;
     text-align: right;
     flex-shrink: 0;
@@ -740,23 +731,25 @@ function renderCard(data) {
   document.getElementById("petName").style.color = rarity === "legendary" ? "#f9e2af" : "#fff";
   document.getElementById("petPersonality").textContent = personality ? `"${personality}"` : "";
   
-  // Stats
+  // Stats - terminal block style
   const statsEl = document.getElementById("statsContainer");
   statsEl.innerHTML = "";
+  const BAR_SLOTS = 20;
   for (const [stat, value] of Object.entries(stats)) {
     const isPeak = stat === peak;
     const isDump = stat === dump;
-    const barColor = isPeak ? rc.color : "#89b4fa";
+    const filled = Math.round(BAR_SLOTS * value / 100);
+    const empty = BAR_SLOTS - filled;
+    const barColor = isPeak ? rc.color : isDump ? "#585b70" : "#6c7086";
     const labelColor = isPeak ? rc.color : isDump ? "#585b70" : "#a6adc8";
     const valueColor = isPeak ? rc.color : "#cdd6f4";
+    const bar = "\u2588".repeat(filled) + "\u2591".repeat(empty);
     
     statsEl.innerHTML += `
       <div class="stat-row">
         <span class="stat-label" style="color:${labelColor}">${stat}</span>
-        <div class="stat-bar-bg">
-          <div class="stat-bar-fill" style="width:${value}%;background:${barColor}"></div>
-        </div>
-        <span class="stat-value" style="color:${valueColor}">${value}</span>
+        <span class="stat-bar" style="color:${barColor}">${bar}</span>
+        <span class="stat-value" style="color:${valueColor}">${String(value).padStart(3)}</span>
       </div>
     `;
   }
@@ -958,38 +951,32 @@ function _drawCard(ctx, d, petName, personality, rc, W, H, M) {
   }
   y += 14;
 
-  // Stats
-  const BAR_X = M + 100, BAR_W = 190, BAR_H = 14;
+  // Stats - terminal style with block characters
+  const BAR_TOTAL = 20; // total block slots
   ctx.textBaseline = "middle";
   for (const [stat, value] of Object.entries(d.stats)) {
     const isPeak = stat === d.peak;
     const isDump = stat === d.dump;
+    const filled = Math.round(BAR_TOTAL * value / 100);
+    const empty = BAR_TOTAL - filled;
+    const bar = "\u2588".repeat(filled) + "\u2591".repeat(empty);
 
     // Label
     ctx.font = "11px 'JetBrains Mono', monospace";
     ctx.fillStyle = isPeak ? rc.color : isDump ? "#585b70" : "#a6adc8";
     ctx.textAlign = "right";
-    ctx.fillText(stat, BAR_X - 10, y + BAR_H / 2);
+    ctx.fillText(stat, M + 90, y);
     ctx.textAlign = "left";
 
-    // Bar bg
-    roundRect(BAR_X, y, BAR_W, BAR_H, 3);
-    ctx.fillStyle = "#2a2a3c";
-    ctx.fill();
-
-    // Bar fill
-    const fw = Math.round(BAR_W * value / 100);
-    if (fw > 0) {
-      roundRect(BAR_X, y, fw, BAR_H, 3);
-      ctx.fillStyle = isPeak ? rc.color : "#7aa2ec";
-      ctx.fill();
-    }
+    // Bar (block chars)
+    ctx.fillStyle = isPeak ? rc.color : isDump ? "#585b70" : "#6c7086";
+    ctx.fillText(bar, M + 98, y);
 
     // Value
-    ctx.font = "11px 'JetBrains Mono', monospace";
+    const valX = M + 98 + ctx.measureText(bar).width + 8;
     ctx.fillStyle = isPeak ? rc.color : "#cdd6f4";
-    ctx.fillText(String(value), BAR_X + BAR_W + 10, y + BAR_H / 2);
-    y += 28;
+    ctx.fillText(String(value).padStart(3), valX, y);
+    y += 20;
   }
 
   // Footer
