@@ -183,11 +183,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
     margin-bottom: 8px;
-    animation: shimmer 2s ease-in-out infinite;
-  }
-  @keyframes shimmer {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+    color: #c89e50;
   }
 
   .ascii-art {
@@ -279,7 +275,7 @@
 <body>
 
 <h1>🐾 Claude Code Buddy Generator</h1>
-<p class="subtitle">Hidden Easter egg in Claude Code source · Mulberry32 PRNG + FNV-1a hash · April Fools 2026</p>
+<p class="subtitle">Buddy Pet Card Generator · April Fools 2026</p>
 
 <div class="container">
   <!-- Controls -->
@@ -352,7 +348,7 @@
 
 <script>
 // ============================================================
-// Data from Claude Code source
+// Pet species and ASCII art data
 // ============================================================
 const SPECIES = [
   "duck","goose","blob","cat","dragon","octopus",
@@ -382,12 +378,13 @@ const RARITIES = ["common","uncommon","rare","epic","legendary"];
 const RARITY_WEIGHTS = {common:60,uncommon:25,rare:10,epic:4,legendary:1};
 const RARITY_STARS = {common:"★",uncommon:"★★",rare:"★★★",epic:"★★★★",legendary:"★★★★★"};
 const RARITY_FLOOR = {common:5,uncommon:15,rare:25,epic:35,legendary:50};
+// Colors from original theme.ts (RGB values)
 const RARITY_COLORS = {
-  common:{color:"#9399b2",gradient:"linear-gradient(135deg,#9399b2,#6c7086)"},
-  uncommon:{color:"#a6e3a1",gradient:"linear-gradient(135deg,#a6e3a1,#74c76e)"},
-  rare:{color:"#89b4fa",gradient:"linear-gradient(135deg,#89b4fa,#5a8fd4)"},
-  epic:{color:"#cba6f7",gradient:"linear-gradient(135deg,#cba6f7,#a77bda)"},
-  legendary:{color:"#f9e2af",gradient:"linear-gradient(135deg,#f9e2af,#f0c674)"},
+  common:{color:"rgb(102,102,102)",gradient:"linear-gradient(135deg,rgb(102,102,102),rgb(80,80,80))"},
+  uncommon:{color:"rgb(44,122,57)",gradient:"linear-gradient(135deg,rgb(44,122,57),rgb(34,100,45))"},
+  rare:{color:"rgb(87,105,247)",gradient:"linear-gradient(135deg,rgb(87,105,247),rgb(67,85,220))"},
+  epic:{color:"rgb(135,0,255)",gradient:"linear-gradient(135deg,rgb(135,0,255),rgb(110,0,210))"},
+  legendary:{color:"rgb(150,108,30)",gradient:"linear-gradient(135deg,rgb(200,158,80),rgb(150,108,30))"},
 };
 const STAT_NAMES = ["DEBUGGING","PATIENCE","CHAOS","WISDOM","SNARK"];
 
@@ -586,7 +583,7 @@ function rollStats(rng, rarity) {
   return { stats, peak, dump };
 }
 
-const SALT = "friend-2026-401";
+const SALT = "friend-2026-401"; // Algorithm salt
 
 function rollFromSeed(seedStr) {
   const h = hashString(seedStr + SALT);
