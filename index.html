@@ -872,13 +872,18 @@ function _drawCard(ctx, d, petName, personality, rc, W, H, M) {
     }
   }
 
-  // Card fill
-  const bgMap = {
-    legendary: "#302820", epic: "#2a2035", rare: "#202a38",
-    uncommon: "#203020", common: "#24243a"
+  // Card fill with gradient (matching CSS)
+  const gradColors = {
+    legendary: ["#1e1e2e","#2d2520"], epic: ["#1e1e2e","#251e2d"],
+    rare: ["#1e1e2e","#1e2430"], uncommon: ["#1e1e2e","#1e2920"],
+    common: ["#1e1e2e","#1e1e2e"]
   };
   roundRect(M, M, W-2*M, H-2*M, 14);
-  ctx.fillStyle = bgMap[d.rarity];
+  const gc = gradColors[d.rarity];
+  const grad = ctx.createLinearGradient(M, M, W-M, H-M);
+  grad.addColorStop(0, gc[0]);
+  grad.addColorStop(1, gc[1]);
+  ctx.fillStyle = grad;
   ctx.fill();
   ctx.strokeStyle = rc.color;
   ctx.lineWidth = d.rarity === "legendary" || d.rarity === "epic" ? 3 : d.rarity === "rare" ? 2 : 1;
