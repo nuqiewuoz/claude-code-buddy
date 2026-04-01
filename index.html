@@ -186,6 +186,42 @@
     color: #c89e50;
   }
 
+  /* Hearthstone-style golden shiny effect */
+  .card.is-shiny .card-inner {
+    overflow: hidden;
+  }
+  .card.is-shiny .card-inner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 20%,
+      rgba(255,215,100,0.08) 35%,
+      rgba(255,215,100,0.18) 42%,
+      rgba(255,255,255,0.12) 50%,
+      rgba(255,215,100,0.18) 58%,
+      rgba(255,215,100,0.08) 65%,
+      transparent 80%
+    );
+    animation: goldenSweep 3s ease-in-out infinite;
+    pointer-events: none;
+    border-radius: 12px;
+  }
+  @keyframes goldenSweep {
+    0% { transform: translateX(-120%); }
+    50% { transform: translateX(120%); }
+    100% { transform: translateX(120%); }
+  }
+  .card.is-shiny .card-inner::before {
+    background: var(--rarity-gradient);
+    animation: borderGlow 2s ease-in-out infinite alternate;
+  }
+  @keyframes borderGlow {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+
   .ascii-art {
     font-family: 'JetBrains Mono', monospace;
     font-size: 22px;
@@ -670,7 +706,7 @@ function renderCard(data) {
   
   // Card class
   const card = document.getElementById("card");
-  card.className = `card rarity-${rarity}`;
+  card.className = `card rarity-${rarity}${shiny ? ' is-shiny' : ''}`;
   
   // Border gradient
   const inner = document.getElementById("cardInner");
