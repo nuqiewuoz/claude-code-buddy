@@ -812,27 +812,32 @@ function downloadCard() {
   const personality = document.getElementById("personality").value || DEFAULT_PERSONALITIES[d.species] || "";
   const rc = RARITY_COLORS[d.rarity];
 
-  // Match the web card dimensions (400px card width)
+  // Match the web card dimensions
   const W = 420, M = 16, S = 2;
-  // Pre-calculate height dynamically
-  let preH = M + 38; // top padding + rarity line
-  if (d.shiny) preH += 22;
-  const artCount = BODIES[d.species].length + (d.hat !== 'none' ? 1 : 0);
-  preH += 8 + artCount * 26 + 12; // art
-  preH += 28; // name
-  if (personality) {
-    const estLines = Math.ceil((`"${personality}"`).length / 38);
-    preH += estLines * 18 + 8;
-  }
-  preH += 5 * 28 + 14; // stats
-  preH += 30; // footer + bottom padding
-  const H = preH;
-
+  // First pass: draw to oversized canvas to measure actual content height
+  const tmpCanvas = document.createElement("canvas");
+  tmpCanvas.width = W * S; tmpCanvas.height = 800 * S;
+  const tmpCtx = tmpCanvas.getContext("2d");
+  tmpCtx.scale(S, S);
+  const measuredH = _drawCard(tmpCtx, d, petName, personality, rc, W, 800, M);
+  // Second pass: draw to exact-fit canvas
+  const H = measuredH + 16; // small bottom padding
   const canvas = document.createElement("canvas");
   canvas.width = W * S; canvas.height = H * S;
   const ctx = canvas.getContext("2d");
   ctx.scale(S, S);
+  _drawCard(ctx, d, petName, personality, rc, W, H, M);
 
+  _drawCard(ctx, d, petName, personality, rc, W, H, M);
+
+  // Download
+  const link = document.createElement("a");
+  link.download = `buddy_${petName.toLowerCase().replace(/\s+/g,"_")}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+function _drawCard(ctx, d, petName, personality, rc, W, H, M) {
   // Background
   ctx.fillStyle = "#1e1e2e";
   ctx.fillRect(0, 0, W, H);
@@ -989,12 +994,7 @@ function downloadCard() {
   ctx.textAlign = "center";
   ctx.fillText(`eye:${EYES_MAP[d.eye]||d.eye} · hat:${d.hat}${d.shiny?" · SHINY":""} · ${RARITY_WEIGHTS[d.rarity]}% chance`, W/2, y);
   ctx.textAlign = "left";
-
-  // Download
-  const link = document.createElement("a");
-  link.download = `buddy_${petName.toLowerCase().replace(/\s+/g,"_")}.png`;
-  link.href = canvas.toDataURL("image/png");
-  link.click();
+  return y;
 }
 
 // Init
