@@ -772,23 +772,172 @@ function seedRoll() {
   renderCard(currentData);
 }
 
-async function downloadCard() {
-  // Use html2canvas if available, otherwise fallback
-  const cardEl = document.getElementById("card");
-  try {
-    const { default: html2canvas } = await import("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm");
-    const canvas = await html2canvas(cardEl, {
-      backgroundColor: "#1e1e2e",
-      scale: 2,
-    });
-    const link = document.createElement("a");
-    const name = document.getElementById("name").value || "buddy";
-    link.download = `buddy_${name.toLowerCase().replace(/\s+/g,"_")}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  } catch(e) {
-    alert("Download requires html2canvas. Try right-clicking the card to save as image.");
+function downloadCard() {
+  if (!currentData) { alert("Generate a card first!"); return; }
+  const d = currentData;
+  const petName = document.getElementById("name").value || DEFAULT_NAMES[d.species] || "Unnamed";
+  const personality = document.getElementById("personality").value || DEFAULT_PERSONALITIES[d.species] || "";
+  const rc = RARITY_COLORS[d.rarity];
+
+  const W = 680, H = 920, M = 24, S = 2;
+  const canvas = document.createElement("canvas");
+  canvas.width = W * S; canvas.height = H * S;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(S, S);
+
+  // Background
+  ctx.fillStyle = "#1e1e2e";
+  ctx.fillRect(0, 0, W, H);
+
+  // Card bg with rounded rect
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+    ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
+    ctx.closePath();
   }
+
+  // Glow for rare+
+  if (["rare","epic","legendary"].includes(d.rarity)) {
+    for (let i = 4; i > 0; i--) {
+      ctx.strokeStyle = rc.color + (i === 4 ? "20" : i === 3 ? "30" : i === 2 ? "40" : "50");
+      ctx.lineWidth = 1;
+      roundRect(M-i*2, M-i*2, W-2*M+i*4, H-2*M+i*4, 16);
+      ctx.stroke();
+    }
+  }
+
+  // Card fill
+  const bgMap = {
+    legendary: "#2d2520", epic: "#251e2d", rare: "#1e2430",
+    uncommon: "#1e2920", common: "#1e1e2e"
+  };
+  roundRect(M, M, W-2*M, H-2*M, 14);
+  ctx.fillStyle = bgMap[d.rarity];
+  ctx.fill();
+  ctx.strokeStyle = rc.color;
+  ctx.lineWidth = d.rarity === "legendary" || d.rarity === "epic" ? 3 : d.rarity === "rare" ? 2 : 1;
+  ctx.stroke();
+
+  let y = M + 50;
+
+  // Rarity badge
+  ctx.font = "bold 16px 'JetBrains Mono', monospace";
+  ctx.fillStyle = rc.color;
+  ctx.textBaseline = "middle";
+  ctx.fillText(`${RARITY_STARS[d.rarity]} ${d.rarity.toUpperCase()}`, M + 30, y);
+
+  // Species (right)
+  ctx.font = "bold 14px 'Inter', sans-serif";
+  ctx.fillStyle = "#b4befe";
+  const spText = d.species.toUpperCase();
+  const spW = ctx.measureText(spText).width;
+  ctx.fillText(spText, W - M - 30 - spW, y);
+  y += 35;
+
+  // Shiny
+  if (d.shiny) {
+    ctx.font = "bold 14px 'JetBrains Mono', monospace";
+    ctx.fillStyle = "#fab387";
+    const shinyText = "~ SHINY ~";
+    const shW = ctx.measureText(shinyText).width;
+    ctx.fillText(shinyText, (W - shW) / 2, y);
+    y += 30;
+  }
+
+  // ASCII art
+  ctx.font = "22px 'JetBrains Mono', Menlo, monospace";
+  ctx.fillStyle = "#cdd6f4";
+  let artLines = BODIES[d.species].map(l => l.replaceAll("{E}", d.eye));
+  if (d.hat !== "none" && HAT_LINES[d.hat]) {
+    artLines = [HAT_LINES[d.hat], ...artLines];
+  }
+  y += 10;
+  for (const line of artLines) {
+    const lw = ctx.measureText(line).width;
+    ctx.fillText(line, (W - lw) / 2, y);
+    y += 32;
+  }
+  y += 15;
+
+  // Name
+  ctx.font = "bold 28px 'Inter', sans-serif";
+  ctx.fillStyle = d.rarity === "legendary" ? "#f9e2af" : "#ffffff";
+  ctx.fillText(petName, M + 40, y);
+  y += 35;
+
+  // Personality (word wrap)
+  if (personality) {
+    ctx.font = "italic 14px 'Inter', sans-serif";
+    ctx.fillStyle = "#9399b2";
+    const quote = `"${personality}"`;
+    const words = quote.split(" ");
+    let line = "";
+    const maxW = W - 2 * M - 80;
+    for (const w of words) {
+      const test = line ? line + " " + w : w;
+      if (ctx.measureText(test).width > maxW && line) {
+        ctx.fillText(line, M + 40, y);
+        y += 22;
+        line = w;
+      } else {
+        line = test;
+      }
+    }
+    if (line) { ctx.fillText(line, M + 40, y); y += 22; }
+  }
+  y += 18;
+
+  // Stats
+  const BAR_X = M + 160, BAR_W = 280, BAR_H = 18;
+  ctx.textBaseline = "middle";
+  for (const [stat, value] of Object.entries(d.stats)) {
+    const isPeak = stat === d.peak;
+    const isDump = stat === d.dump;
+
+    // Label
+    ctx.font = "13px 'JetBrains Mono', monospace";
+    ctx.fillStyle = isPeak ? rc.color : isDump ? "#585b70" : "#a6adc8";
+    ctx.textAlign = "right";
+    ctx.fillText(stat, BAR_X - 12, y + BAR_H / 2);
+    ctx.textAlign = "left";
+
+    // Bar bg
+    roundRect(BAR_X, y, BAR_W, BAR_H, 4);
+    ctx.fillStyle = "#313244";
+    ctx.fill();
+
+    // Bar fill
+    const fw = Math.round(BAR_W * value / 100);
+    if (fw > 0) {
+      roundRect(BAR_X, y, fw, BAR_H, 4);
+      ctx.fillStyle = isPeak ? rc.color : "#89b4fa";
+      ctx.fill();
+    }
+
+    // Value
+    ctx.font = "13px 'JetBrains Mono', monospace";
+    ctx.fillStyle = isPeak ? rc.color : "#cdd6f4";
+    ctx.fillText(String(value), BAR_X + BAR_W + 12, y + BAR_H / 2);
+    y += 34;
+  }
+
+  // Footer
+  y += 12;
+  ctx.font = "12px 'JetBrains Mono', monospace";
+  ctx.fillStyle = "#45475a";
+  ctx.textAlign = "center";
+  ctx.fillText(`eye:${EYES_MAP[d.eye]||d.eye} · hat:${d.hat}${d.shiny?" · SHINY":""} · ${RARITY_WEIGHTS[d.rarity]}% chance`, W/2, y);
+  ctx.textAlign = "left";
+
+  // Download
+  const link = document.createElement("a");
+  link.download = `buddy_${petName.toLowerCase().replace(/\s+/g,"_")}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
 }
 
 // Init
