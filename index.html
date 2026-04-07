@@ -42,7 +42,6 @@
     justify-content: center;
   }
 
-  /* Controls Panel */
   .controls {
     background: #313244;
     border-radius: 16px;
@@ -77,12 +76,8 @@
     outline: none;
     transition: border-color 0.2s;
   }
-  .field select:focus, .field input:focus {
-    border-color: #89b4fa;
-  }
-  .field input::placeholder {
-    color: #585b70;
-  }
+  .field select:focus, .field input:focus { border-color: #89b4fa; }
+  .field input::placeholder { color: #585b70; }
 
   .btn-row {
     display: flex;
@@ -99,27 +94,17 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-  .btn-generate {
-    background: #89b4fa;
-    color: #1e1e2e;
-  }
+  .btn-generate { background: #89b4fa; color: #1e1e2e; }
   .btn-generate:hover { background: #b4d0fb; }
-  .btn-random {
-    background: #f9e2af;
-    color: #1e1e2e;
-  }
+  .btn-random { background: #f9e2af; color: #1e1e2e; }
   .btn-random:hover { background: #fbebc7; }
-  .btn-download {
-    background: #a6e3a1;
-    color: #1e1e2e;
-    margin-top: 10px;
-  }
+  .btn-download { background: #a6e3a1; color: #1e1e2e; margin-top: 10px; }
   .btn-download:hover { background: #c0f0bc; }
-  .btn-seed {
-    background: #cba6f7;
-    color: #1e1e2e;
-  }
+  .btn-seed { background: #cba6f7; color: #1e1e2e; }
   .btn-seed:hover { background: #dcc0fa; }
+  .btn-find { background: #f38ba8; color: #1e1e2e; }
+  .btn-find:hover { background: #f5a8b8; }
+  .btn-find:disabled { background: #585b70; cursor: not-allowed; }
 
   .seed-section {
     margin-top: 16px;
@@ -127,7 +112,57 @@
     border-top: 1px solid #45475a;
   }
 
-  /* Card Preview */
+  /* UUID Finder section */
+  .uuid-section {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #45475a;
+  }
+  .uuid-section h3 {
+    font-size: 14px;
+    color: #f38ba8;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .uuid-section p {
+    font-size: 12px;
+    color: #6c7086;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .uuid-result {
+    margin-top: 12px;
+    display: none;
+  }
+  .uuid-result.visible { display: block; }
+  .uuid-box {
+    background: #1e1e2e;
+    border: 1px solid #45475a;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #a6e3a1;
+    word-break: break-all;
+    margin-bottom: 8px;
+  }
+  .btn-copy {
+    background: #45475a;
+    color: #cdd6f4;
+    font-size: 12px;
+    padding: 6px 12px;
+    flex: none;
+    width: 100%;
+  }
+  .btn-copy:hover { background: #585b70; }
+  .uuid-progress {
+    font-size: 12px;
+    color: #6c7086;
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 6px;
+    min-height: 18px;
+  }
+
   .card-wrapper {
     display: flex;
     flex-direction: column;
@@ -165,45 +200,15 @@
     align-items: center;
     margin-bottom: 8px;
   }
-  .rarity-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .species-badge {
-    font-size: 13px;
-    color: #b4befe;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+  .rarity-badge { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700; }
+  .species-badge { font-size: 13px; color: #b4befe; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .shiny-badge { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; margin-bottom: 8px; color: #c89e50; }
 
-  .shiny-badge {
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    margin-bottom: 8px;
-    color: #c89e50;
-  }
-
-  /* Hearthstone-style golden shiny effect */
-  .card.is-shiny .card-inner {
-    overflow: hidden;
-  }
   .card.is-shiny .card-inner::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      105deg,
-      transparent 20%,
-      rgba(255,215,100,0.08) 35%,
-      rgba(255,215,100,0.18) 42%,
-      rgba(255,255,255,0.12) 50%,
-      rgba(255,215,100,0.18) 58%,
-      rgba(255,215,100,0.08) 65%,
-      transparent 80%
-    );
+    background: linear-gradient(105deg, transparent 20%, rgba(255,215,100,0.08) 35%, rgba(255,215,100,0.18) 42%, rgba(255,255,255,0.12) 50%, rgba(255,215,100,0.18) 58%, rgba(255,215,100,0.08) 65%, transparent 80%);
     animation: goldenSweep 3s ease-in-out infinite;
     pointer-events: none;
     border-radius: 12px;
@@ -213,14 +218,8 @@
     50% { transform: translateX(120%); }
     100% { transform: translateX(120%); }
   }
-  .card.is-shiny .card-inner::before {
-    background: var(--rarity-gradient);
-    animation: borderGlow 2s ease-in-out infinite alternate;
-  }
-  @keyframes borderGlow {
-    0% { opacity: 0.6; }
-    100% { opacity: 1; }
-  }
+  .card.is-shiny .card-inner::before { animation: borderGlow 2s ease-in-out infinite alternate; }
+  @keyframes borderGlow { 0% { opacity: 0.6; } 100% { opacity: 1; } }
 
   .ascii-art {
     font-family: 'JetBrains Mono', monospace;
@@ -231,67 +230,18 @@
     padding: 16px 0;
     color: #cdd6f4;
   }
+  .pet-name { font-size: 26px; font-weight: 700; color: #fff; margin: 8px 0; }
+  .pet-personality { font-size: 13px; color: #9399b2; font-style: italic; line-height: 1.5; margin-bottom: 16px; }
+  .stats { display: flex; flex-direction: column; gap: 6px; }
+  .stat-row { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1; }
+  .stat-label { width: 90px; text-align: right; flex-shrink: 0; }
+  .stat-bar { flex-shrink: 0; letter-spacing: -1px; }
+  .stat-value { width: 28px; text-align: right; flex-shrink: 0; }
+  .card-footer { margin-top: 20px; text-align: center; font-size: 12px; color: #45475a; font-family: 'JetBrains Mono', monospace; }
 
-  .pet-name {
-    font-size: 26px;
-    font-weight: 700;
-    color: #fff;
-    margin: 8px 0;
-  }
-  .pet-personality {
-    font-size: 13px;
-    color: #9399b2;
-    font-style: italic;
-    line-height: 1.5;
-    margin-bottom: 16px;
-  }
+  .card-inner.pop { animation: cardPop 0.4s ease; }
+  @keyframes cardPop { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-  .stats {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .stat-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    line-height: 1;
-  }
-  .stat-label {
-    width: 90px;
-    text-align: right;
-    flex-shrink: 0;
-  }
-  .stat-bar {
-    flex-shrink: 0;
-    letter-spacing: -1px;
-  }
-  .stat-value {
-    width: 28px;
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  .card-footer {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 12px;
-    color: #45475a;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* Animation for card appear */
-  .card-inner.pop {
-    animation: cardPop 0.4s ease;
-  }
-  @keyframes cardPop {
-    0% { transform: scale(0.9); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  /* Rarity-specific glow */
   .rarity-legendary .card-inner { background: linear-gradient(135deg, #1e1e2e 0%, #2d2520 100%); }
   .rarity-epic .card-inner { background: linear-gradient(135deg, #1e1e2e 0%, #251e2d 100%); }
   .rarity-rare .card-inner { background: linear-gradient(135deg, #1e1e2e 0%, #1e2430 100%); }
@@ -305,7 +255,6 @@
 <p class="subtitle">Buddy Pet Card Generator · April Fools 2026</p>
 
 <div class="container">
-  <!-- Controls -->
   <div class="controls">
     <h2>Customize</h2>
     
@@ -345,16 +294,28 @@
 
     <div class="seed-section">
       <div class="field">
-        <label>Seed (userId)</label>
-        <input type="text" id="seed" placeholder="e.g. your-user-id">
+        <label>Seed (accountUuid / userID)</label>
+        <input type="text" id="seed" placeholder="e.g. your-account-uuid">
       </div>
       <button class="btn-seed" style="width:100%" onclick="seedRoll()">Roll from Seed</button>
+    </div>
+
+    <!-- UUID Finder -->
+    <div class="uuid-section">
+      <h3>🔍 Find My UUID</h3>
+      <p>Based on your current customization (species, eye, hat, rarity, shiny), find a UUID that produces exactly this companion in Claude Code.</p>
+      <button class="btn-find" id="btnFind" style="width:100%" onclick="findUUID()">Find UUID for This Build</button>
+      <div class="uuid-progress" id="uuidProgress"></div>
+      <div class="uuid-result" id="uuidResult">
+        <div class="uuid-box" id="uuidBox"></div>
+        <button class="btn-copy" onclick="copyUUID()">📋 Copy UUID</button>
+        <p style="margin-top:8px;font-size:11px;color:#6c7086;">Paste into <code style="color:#cba6f7">~/.claude.json</code> → <code style="color:#cba6f7">oauthAccount.accountUuid</code>, then restart Claude Code.</p>
+      </div>
     </div>
 
     <button class="btn-download" style="width:100%" onclick="downloadCard()">📥 Download PNG</button>
   </div>
 
-  <!-- Card Preview -->
   <div class="card-wrapper">
     <div class="card" id="card">
       <div class="card-inner" id="cardInner">
@@ -374,38 +335,17 @@
 </div>
 
 <script>
-// ============================================================
-// Pet species and ASCII art data
-// ============================================================
-const SPECIES = [
-  "duck","goose","blob","cat","dragon","octopus",
-  "owl","penguin","turtle","snail","ghost","axolotl",
-  "capybara","cactus","robot","rabbit","mushroom","chonk"
-];
-const SPECIES_EMOJI = {
-  duck:"🦆",goose:"🪿",blob:"🫧",cat:"🐱",dragon:"🐉",octopus:"🐙",
-  owl:"🦉",penguin:"🐧",turtle:"🐢",snail:"🐌",ghost:"👻",axolotl:"🦎",
-  capybara:"🦫",cactus:"🌵",robot:"🤖",rabbit:"🐰",mushroom:"🍄",chonk:"😺"
-};
+const SPECIES = ["duck","goose","blob","cat","dragon","octopus","owl","penguin","turtle","snail","ghost","axolotl","capybara","cactus","robot","rabbit","mushroom","chonk"];
+const SPECIES_EMOJI = {duck:"🦆",goose:"🪿",blob:"🫧",cat:"🐱",dragon:"🐉",octopus:"🐙",owl:"🦉",penguin:"🐧",turtle:"🐢",snail:"🐌",ghost:"👻",axolotl:"🦎",capybara:"🦫",cactus:"🌵",robot:"🤖",rabbit:"🐰",mushroom:"🍄",chonk:"😺"};
 const EYES_MAP = {"·":"dot","✦":"star","×":"cross","◉":"circle","@":"at","°":"tilde"};
 const EYES = Object.keys(EYES_MAP);
 const HATS = ["none","crown","tophat","propeller","halo","wizard","beanie","tinyduck"];
 const HAT_LABELS = {none:"None",crown:"👑 Crown",tophat:"🎩 Top Hat",propeller:"🌀 Propeller",halo:"😇 Halo",wizard:"🧙 Wizard",beanie:"🧢 Beanie",tinyduck:"🐤 Tiny Duck"};
-const HAT_LINES = {
-  none:"",
-  crown:"   \\^^^/    ",
-  tophat:"   [___]    ",
-  propeller:"    -+-     ",
-  halo:"   (   )    ",
-  wizard:"    /^\\     ",
-  beanie:"   (___)    ",
-  tinyduck:"    ,>      ",
-};
+const HAT_LINES = {none:"",crown:"   \\^^^/    ",tophat:"   [___]    ",propeller:"    -+-     ",halo:"   (   )    ",wizard:"    /^\\     ",beanie:"   (___)    ",tinyduck:"    ,>      "};
 const RARITIES = ["common","uncommon","rare","epic","legendary"];
 const RARITY_WEIGHTS = {common:60,uncommon:25,rare:10,epic:4,legendary:1};
 const RARITY_STARS = {common:"★",uncommon:"★★",rare:"★★★",epic:"★★★★",legendary:"★★★★★"};
 const RARITY_FLOOR = {common:5,uncommon:15,rare:25,epic:35,legendary:50};
-// Colors from original theme.ts (RGB values)
 const RARITY_COLORS = {
   common:{color:"rgb(102,102,102)",gradient:"linear-gradient(135deg,rgb(102,102,102),rgb(80,80,80))"},
   uncommon:{color:"rgb(44,122,57)",gradient:"linear-gradient(135deg,rgb(44,122,57),rgb(34,100,45))"},
@@ -416,148 +356,86 @@ const RARITY_COLORS = {
 const STAT_NAMES = ["DEBUGGING","PATIENCE","CHAOS","WISDOM","SNARK"];
 
 const BODIES = {
-  duck:[
-    "    __      ",
-    "  <({E} )___  ",
-    "   (  ._>   ",
-    "    `--'    ",
-  ],
-  goose:[
-    "     ({E}>    ",
-    "     ||     ",
-    "   _(__)_   ",
-    "    ^^^^    ",
-  ],
-  blob:[
-    "   .----.   ",
-    "  ( {E}  {E} )  ",
-    "  (      )  ",
-    "   `----'   ",
-  ],
-  cat:[
-    "   /\\_/\\    ",
-    "  ( {E}   {E})  ",
-    "  (  ω  )   ",
-    '  (")_(")   ',
-  ],
-  dragon:[
-    "  /^\\  /^\\  ",
-    " <  {E}  {E}  > ",
-    " (   ~~   ) ",
-    "  `-vvvv-'  ",
-  ],
-  octopus:[
-    "   .----.   ",
-    "  ( {E}  {E} )  ",
-    "  (______)  ",
-    "  /\\/\\/\\/\\  ",
-  ],
-  owl:[
-    "   /\\  /\\   ",
-    "  (({E})({E}))  ",
-    "  (  ><  )  ",
-    "   `----'   ",
-  ],
-  penguin:[
-    "  .---.     ",
-    "  ({E}>{E})     ",
-    " /(   )\\    ",
-    "  `---'     ",
-  ],
-  turtle:[
-    "   _,--._   ",
-    "  ( {E}  {E} )  ",
-    " /[______]\\ ",
-    "  ``    ``  ",
-  ],
-  snail:[
-    " {E}    .--.  ",
-    "  \\  ( @ )  ",
-    "   \\_`--'   ",
-    "  ~~~~~~~   ",
-  ],
-  ghost:[
-    "   .----.   ",
-    "  / {E}  {E} \\  ",
-    "  |      |  ",
-    "  ~`~``~`~  ",
-  ],
-  axolotl:[
-    "}~(______)~{",
-    "}~({E} .. {E})~{",
-    "  ( .--. )  ",
-    "  (_/  \\_)  ",
-  ],
-  capybara:[
-    "  n______n  ",
-    " ( {E}    {E} ) ",
-    " (   oo   ) ",
-    "  `------'  ",
-  ],
-  cactus:[
-    " n  ____  n ",
-    " | |{E}  {E}| | ",
-    " |_|    |_| ",
-    "   |    |   ",
-  ],
-  robot:[
-    "   .[||].   ",
-    "  [ {E}  {E} ]  ",
-    "  [ ==== ]  ",
-    "  `------'  ",
-  ],
-  rabbit:[
-    "   (\\__/)   ",
-    "  ( {E}  {E} )  ",
-    " =(  ..  )= ",
-    '  (")__(")  ',
-  ],
-  mushroom:[
-    " .-o-OO-o-. ",
-    "(__________)",
-    "   |{E}  {E}|   ",
-    "   |____|   ",
-  ],
-  chonk:[
-    "  /\\    /\\  ",
-    " ( {E}    {E} ) ",
-    " (   ..   ) ",
-    "  `------'  ",
-  ],
+  duck:["    __      ","  <({E} )___  ","   (  ._>   ","    `--'    "],
+  goose:["     ({E}>    ","     ||     ","   _(__)_   ","    ^^^^    "],
+  blob:["   .----.   ","  ( {E}  {E} )  ","  (      )  ","   `----'   "],
+  cat:["   /\\_/\\    ","  ( {E}   {E})  ","  (  ω  )   ",'  (")_(")   '],
+  dragon:["  /^\\  /^\\  "," <  {E}  {E}  > "," (   ~~   ) ","  `-vvvv-'  "],
+  octopus:["   .----.   ","  ( {E}  {E} )  ","  (______)  ","  /\\/\\/\\/\\  "],
+  owl:["   /\\  /\\   ","  (({E})({E}))  ","  (  ><  )  ","   `----'   "],
+  penguin:["  .---.     ","  ({E}>{E})     "," /(   )\\    ","  `---'     "],
+  turtle:["   _,--._   ","  ( {E}  {E} )  "," /[______]\\ ","  ``    ``  "],
+  snail:[" {E}    .--.  ","  \\  ( @ )  ","   \\_`--'   ","  ~~~~~~~   "],
+  ghost:["   .----.   ","  / {E}  {E} \\  ","  |      |  ","  ~`~``~`~  "],
+  axolotl:["}~(______)~{","}~({E} .. {E})~{","  ( .--. )  ","  (_/  \\_)  "],
+  capybara:["  n______n  "," ( {E}    {E} ) "," (   oo   ) ","  `------'  "],
+  cactus:[" n  ____  n "," | |{E}  {E}| | "," |_|    |_| ","   |    |   "],
+  robot:["   .[||].   ","  [ {E}  {E} ]  ","  [ ==== ]  ","  `------'  "],
+  rabbit:["   (\\__/)   ","  ( {E}  {E} )  "," =(  ..  )= ",'  (")__(")  '],
+  mushroom:[" .-o-OO-o-. ","(__)__________)","   |{E}  {E}|   ","   |____|   "],
+  chonk:["  /\\    /\\  "," ( {E}    {E} ) "," (   ..   ) ","  `------'  "],
 };
 
-const DEFAULT_NAMES = {
-  duck:"Waddle",goose:"Honkers",blob:"Gloop",cat:"Pixel",dragon:"Emberstorm",
-  octopus:"Inky",owl:"Sage",penguin:"Tux",turtle:"Shelldon",snail:"Spiral",
-  ghost:"Whisper",axolotl:"Nebula",capybara:"Mochi",cactus:"Spike",
-  robot:"Circuit",rabbit:"Clover",mushroom:"Spore",chonk:"Chunk"
-};
-
-const DEFAULT_PERSONALITIES = {
-  duck:"A reliable companion who debugs by quacking at the screen until the bug confesses.",
-  goose:"Steals your cursor when you're not looking. Has no remorse.",
-  blob:"Absorbs your stress and converts it into slightly better variable names.",
-  cat:"Walks across your keyboard at critical moments. Every typo is intentional art.",
-  dragon:"Breathes fire on your merge conflicts. Surprisingly gentle with documentation.",
-  octopus:"Multitasks across 8 terminals simultaneously. Never closes unused tabs.",
-  owl:"Reviews your PRs at 3am. Sees bugs you haven't written yet.",
-  penguin:"Thrives in cold environments. Your server room's unofficial mascot.",
-  turtle:"Slow but steady. Has never shipped a bug because every release takes 6 months.",
-  snail:"Leaves a trail of console.logs everywhere. You'll thank them during debugging.",
-  ghost:"Haunts your git history. Knows every commit you force-pushed and judges silently.",
-  axolotl:"Regenerates lost semicolons and swallows segfaults whole. Never wrong, occasionally chaotic.",
-  capybara:"Gets along with every framework. The ultimate peacekeeper in tabs vs spaces debates.",
-  cactus:"Prickly about code style. Runs the linter before you even save.",
-  robot:"Follows every best practice to the letter. Has strong opinions about naming conventions.",
-  rabbit:"Multiplies your unit tests exponentially. Your coverage report has never looked better.",
-  mushroom:"Grows in dark codebases. Thrives where others fear to refactor.",
-  chonk:"Sits on your keyboard for warmth. Your longest running process.",
-};
+const DEFAULT_NAMES = {duck:"Waddle",goose:"Honkers",blob:"Gloop",cat:"Pixel",dragon:"Emberstorm",octopus:"Inky",owl:"Sage",penguin:"Tux",turtle:"Shelldon",snail:"Spiral",ghost:"Whisper",axolotl:"Nebula",capybara:"Mochi",cactus:"Spike",robot:"Circuit",rabbit:"Clover",mushroom:"Spore",chonk:"Chunk"};
+const DEFAULT_PERSONALITIES = {duck:"A reliable companion who debugs by quacking at the screen until the bug confesses.",goose:"Steals your cursor when you're not looking. Has no remorse.",blob:"Absorbs your stress and converts it into slightly better variable names.",cat:"Walks across your keyboard at critical moments. Every typo is intentional art.",dragon:"Breathes fire on your merge conflicts. Surprisingly gentle with documentation.",octopus:"Multitasks across 8 terminals simultaneously. Never closes unused tabs.",owl:"Reviews your PRs at 3am. Sees bugs you haven't written yet.",penguin:"Thrives in cold environments. Your server room's unofficial mascot.",turtle:"Slow but steady. Has never shipped a bug because every release takes 6 months.",snail:"Leaves a trail of console.logs everywhere. You'll thank them during debugging.",ghost:"Haunts your git history. Knows every commit you force-pushed and judges silently.",axolotl:"Regenerates lost semicolons and swallows segfaults whole. Never wrong, occasionally chaotic.",capybara:"Gets along with every framework. The ultimate peacekeeper in tabs vs spaces debates.",cactus:"Prickly about code style. Runs the linter before you even save.",robot:"Follows every best practice to the letter. Has strong opinions about naming conventions.",rabbit:"Multiplies your unit tests exponentially. Your coverage report has never looked better.",mushroom:"Grows in dark codebases. Thrives where others fear to refactor.",chonk:"Sits on your keyboard for warmth. Your longest running process."};
 
 // ============================================================
-// Mulberry32 PRNG
+// Wyhash — matches Bun.hash() used by Claude Code
 // ============================================================
-function mulberry32(seed) {
+const WYHASH_M = (1n << 64n) - 1n;
+const WYHASH_S = [0xa0761d6478bd642fn, 0xe7037ed1a0b428dbn, 0x8ebc6af09c88c6e3n, 0x589965cc75374cc3n];
+
+function wyhashMix(a, b) {
+  const r = (a & WYHASH_M) * (b & WYHASH_M);
+  return ((r & WYHASH_M) ^ (r >> 64n)) & WYHASH_M;
+}
+
+function wyhash(str) {
+  const buf = new TextEncoder().encode(str);
+  const n = buf.length;
+  const r8 = (p) => { let v = 0n; for (let i = 7; i >= 0; i--) v = (v << 8n) | BigInt(buf[p+i]||0); return v; };
+  const r4 = (p) => BigInt((buf[p]||0)|((buf[p+1]||0)<<8)|((buf[p+2]||0)<<16)|((buf[p+3]||0)<<24));
+
+  let seed = wyhashMix(WYHASH_S[0], WYHASH_S[1]);
+  let a, b;
+
+  if (n <= 16) {
+    if (n >= 4) {
+      a = (r4(0) << 32n) | r4((n>>3)<<2);
+      b = (r4(n-4) << 32n) | r4(n-4-((n>>3)<<2));
+    } else if (n > 0) {
+      a = (BigInt(buf[0]) << 16n) | (BigInt(buf[n>>1]) << 8n) | BigInt(buf[n-1]);
+      b = 0n;
+    } else { a = b = 0n; }
+  } else {
+    let i = n, p = 0;
+    if (i > 48) {
+      let s1 = seed, s2 = seed;
+      do {
+        seed = wyhashMix(r8(p)^WYHASH_S[1], r8(p+8)^seed);
+        s1 = wyhashMix(r8(p+16)^WYHASH_S[2], r8(p+24)^s1);
+        s2 = wyhashMix(r8(p+32)^WYHASH_S[3], r8(p+40)^s2);
+        p += 48; i -= 48;
+      } while (i > 48);
+      seed = (seed ^ s1 ^ s2) & WYHASH_M;
+    }
+    while (i > 16) {
+      seed = wyhashMix(r8(p)^WYHASH_S[1], r8(p+8)^seed);
+      p += 16; i -= 16;
+    }
+    a = r8(p+i-16); b = r8(p+i-8);
+  }
+
+  a ^= WYHASH_S[1]; b ^= seed;
+  const rr = (a & WYHASH_M) * (b & WYHASH_M);
+  a = rr & WYHASH_M; b = (rr >> 64n) & WYHASH_M;
+  return wyhashMix(a ^ WYHASH_S[0] ^ BigInt(n), b ^ WYHASH_S[1]);
+}
+
+// ============================================================
+// PRNG — GI4 from Claude Code binary (identical to mulberry32)
+// ============================================================
+function makePRNG(seed) {
   let a = seed >>> 0;
   return function() {
     a |= 0;
@@ -568,26 +446,12 @@ function mulberry32(seed) {
   };
 }
 
-function hashString(s) {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function pick(rng, arr) {
-  return arr[Math.floor(rng() * arr.length)];
-}
+function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
 
 function rollRarity(rng) {
   const total = Object.values(RARITY_WEIGHTS).reduce((a,b) => a+b, 0);
   let roll = rng() * total;
-  for (const r of RARITIES) {
-    roll -= RARITY_WEIGHTS[r];
-    if (roll < 0) return r;
-  }
+  for (const r of RARITIES) { roll -= RARITY_WEIGHTS[r]; if (roll < 0) return r; }
   return "common";
 }
 
@@ -596,16 +460,11 @@ function rollStats(rng, rarity) {
   const peak = pick(rng, STAT_NAMES);
   let dump = pick(rng, STAT_NAMES);
   while (dump === peak) dump = pick(rng, STAT_NAMES);
-  
   const stats = {};
   for (const name of STAT_NAMES) {
-    if (name === peak) {
-      stats[name] = Math.min(100, floor + 50 + Math.floor(rng() * 30));
-    } else if (name === dump) {
-      stats[name] = Math.max(1, floor - 10 + Math.floor(rng() * 15));
-    } else {
-      stats[name] = floor + Math.floor(rng() * 40);
-    }
+    if (name === peak) stats[name] = Math.min(100, floor + 50 + Math.floor(rng() * 30));
+    else if (name === dump) stats[name] = Math.max(1, floor - 10 + Math.floor(rng() * 15));
+    else stats[name] = floor + Math.floor(rng() * 40);
   }
   return { stats, peak, dump };
 }
@@ -613,8 +472,8 @@ function rollStats(rng, rarity) {
 const SALT = "friend-2026-401";
 
 function rollFromSeed(seedStr) {
-  const h = hashString(seedStr + SALT);
-  const rng = mulberry32(h);
+  const h = Number(wyhash(seedStr + SALT) & 0xFFFFFFFFn);
+  const rng = makePRNG(h);
   const rarity = rollRarity(rng);
   const species = pick(rng, SPECIES);
   const eye = pick(rng, EYES);
@@ -625,10 +484,136 @@ function rollFromSeed(seedStr) {
 }
 
 // ============================================================
+// UUID Finder — Web Worker via Blob URL
+// ============================================================
+const WORKER_CODE = `
+const M = (1n << 64n) - 1n;
+const S = [0xa0761d6478bd642fn, 0xe7037ed1a0b428dbn, 0x8ebc6af09c88c6e3n, 0x589965cc75374cc3n];
+function mix(a,b){const r=(a&M)*(b&M);return((r&M)^(r>>64n))&M;}
+function wyhash(str){
+  const buf=new TextEncoder().encode(str),n=buf.length;
+  const r8=(p)=>{let v=0n;for(let i=7;i>=0;i--)v=(v<<8n)|BigInt(buf[p+i]||0);return v;};
+  const r4=(p)=>BigInt((buf[p]||0)|((buf[p+1]||0)<<8)|((buf[p+2]||0)<<16)|((buf[p+3]||0)<<24));
+  let seed=mix(S[0],S[1]),a,b;
+  if(n<=16){
+    if(n>=4){a=(r4(0)<<32n)|r4((n>>3)<<2);b=(r4(n-4)<<32n)|r4(n-4-((n>>3)<<2));}
+    else if(n>0){a=(BigInt(buf[0])<<16n)|(BigInt(buf[n>>1])<<8n)|BigInt(buf[n-1]);b=0n;}
+    else{a=b=0n;}
+  }else{
+    let i=n,p=0;
+    if(i>48){let s1=seed,s2=seed;do{seed=mix(r8(p)^S[1],r8(p+8)^seed);s1=mix(r8(p+16)^S[2],r8(p+24)^s1);s2=mix(r8(p+32)^S[3],r8(p+40)^s2);p+=48;i-=48;}while(i>48);seed=(seed^s1^s2)&M;}
+    while(i>16){seed=mix(r8(p)^S[1],r8(p+8)^seed);p+=16;i-=16;}
+    a=r8(p+i-16);b=r8(p+i-8);
+  }
+  a^=S[1];b^=seed;const rr=(a&M)*(b&M);a=rr&M;b=(rr>>64n)&M;
+  return mix(a^S[0]^BigInt(n),b^S[1]);
+}
+function makePRNG(seed){
+  let a=seed>>>0;
+  return function(){a|=0;a=(a+0x6d2b79f5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};
+}
+const SPECIES=["duck","goose","blob","cat","dragon","octopus","owl","penguin","turtle","snail","ghost","axolotl","capybara","cactus","robot","rabbit","mushroom","chonk"];
+const RARITIES=["common","uncommon","rare","epic","legendary"];
+const RARITY_WEIGHTS={common:60,uncommon:25,rare:10,epic:4,legendary:1};
+const HATS=["none","crown","tophat","propeller","halo","wizard","beanie","tinyduck"];
+const EYES=["·","✦","×","◉","@","°"];
+const SALT="friend-2026-401";
+function pick(rng,arr){return arr[Math.floor(rng()*arr.length)];}
+function rollRarity(rng){const total=Object.values(RARITY_WEIGHTS).reduce((a,b)=>a+b,0);let roll=rng()*total;for(const r of RARITIES){roll-=RARITY_WEIGHTS[r];if(roll<0)return r;}return"common";}
+function roll(uuid){
+  const h=Number(wyhash(uuid+SALT)&0xFFFFFFFFn);
+  const rng=makePRNG(h);
+  const rarity=rollRarity(rng);
+  const species=pick(rng,SPECIES);
+  const eye=pick(rng,EYES);
+  const hat=rarity==="common"?"none":pick(rng,HATS);
+  const shiny=rng()<0.01;
+  return{rarity,species,eye,hat,shiny};
+}
+function randomUUID(){
+  const h=()=>Math.floor(Math.random()*16).toString(16);
+  const s=(n)=>Array.from({length:n},h).join('');
+  return s(8)+'-'+s(4)+'-4'+s(3)+'-'+['8','9','a','b'][Math.floor(Math.random()*4)]+s(3)+'-'+s(12);
+}
+self.onmessage=function(e){
+  const{species,eye,hat,rarity,shiny}=e.data;
+  let tries=0;
+  while(true){
+    const uuid=randomUUID();
+    const r=roll(uuid);
+    tries++;
+    if(tries%50000===0) self.postMessage({type:'progress',tries});
+    if(r.rarity===rarity&&r.species===species&&r.shiny===shiny&&r.eye===eye&&r.hat===hat){
+      self.postMessage({type:'found',uuid,tries});
+      return;
+    }
+  }
+};
+`;
+
+let currentWorker = null;
+
+function findUUID() {
+  const btn = document.getElementById('btnFind');
+  const progress = document.getElementById('uuidProgress');
+  const result = document.getElementById('uuidResult');
+
+  if (currentWorker) {
+    currentWorker.terminate();
+    currentWorker = null;
+    btn.textContent = 'Find UUID for This Build';
+    btn.disabled = false;
+    progress.textContent = 'Cancelled.';
+    return;
+  }
+
+  const target = {
+    species: document.getElementById('species').value,
+    eye: document.getElementById('eye').value,
+    hat: document.getElementById('hat').value,
+    rarity: document.getElementById('rarity').value,
+    shiny: document.getElementById('shiny').checked,
+  };
+
+  result.classList.remove('visible');
+  progress.textContent = 'Searching...';
+  btn.textContent = '⏹ Stop';
+  btn.disabled = false;
+
+  const blob = new Blob([WORKER_CODE], {type: 'text/javascript'});
+  const url = URL.createObjectURL(blob);
+  currentWorker = new Worker(url);
+
+  currentWorker.onmessage = (e) => {
+    if (e.data.type === 'progress') {
+      progress.textContent = `Searching... ${e.data.tries.toLocaleString()} tries`;
+    } else if (e.data.type === 'found') {
+      progress.textContent = `✅ Found after ${e.data.tries.toLocaleString()} tries`;
+      document.getElementById('uuidBox').textContent = e.data.uuid;
+      result.classList.add('visible');
+      btn.textContent = 'Find UUID for This Build';
+      btn.disabled = false;
+      currentWorker.terminate();
+      currentWorker = null;
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  currentWorker.postMessage(target);
+}
+
+function copyUUID() {
+  const uuid = document.getElementById('uuidBox').textContent;
+  navigator.clipboard.writeText(uuid).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy UUID', 2000);
+  });
+}
+
+// ============================================================
 // UI
 // ============================================================
-
-// Populate selects
 function initControls() {
   const speciesEl = document.getElementById("species");
   SPECIES.forEach(s => {
@@ -637,7 +622,6 @@ function initControls() {
     opt.textContent = `${SPECIES_EMOJI[s]||""} ${s}`;
     speciesEl.appendChild(opt);
   });
-  
   const eyeEl = document.getElementById("eye");
   EYES.forEach(e => {
     const opt = document.createElement("option");
@@ -645,7 +629,6 @@ function initControls() {
     opt.textContent = `${e}  (${EYES_MAP[e]})`;
     eyeEl.appendChild(opt);
   });
-  
   const hatEl = document.getElementById("hat");
   HATS.forEach(h => {
     const opt = document.createElement("option");
@@ -653,7 +636,6 @@ function initControls() {
     opt.textContent = HAT_LABELS[h] || h;
     hatEl.appendChild(opt);
   });
-  
   const rarityEl = document.getElementById("rarity");
   RARITIES.forEach(r => {
     const opt = document.createElement("option");
@@ -681,12 +663,8 @@ function setFormData(data) {
   document.getElementById("hat").value = data.hat;
   document.getElementById("rarity").value = data.rarity;
   document.getElementById("shiny").checked = data.shiny;
-  if (!document.getElementById("name").value) {
-    document.getElementById("name").value = DEFAULT_NAMES[data.species] || "";
-  }
-  if (!document.getElementById("personality").value) {
-    document.getElementById("personality").value = DEFAULT_PERSONALITIES[data.species] || "";
-  }
+  if (!document.getElementById("name").value) document.getElementById("name").value = DEFAULT_NAMES[data.species] || "";
+  if (!document.getElementById("personality").value) document.getElementById("personality").value = DEFAULT_PERSONALITIES[data.species] || "";
 }
 
 function renderCard(data) {
@@ -694,92 +672,68 @@ function renderCard(data) {
   const name = document.getElementById("name").value || DEFAULT_NAMES[species] || "Unnamed";
   const personality = document.getElementById("personality").value || DEFAULT_PERSONALITIES[species] || "";
   const rc = RARITY_COLORS[rarity];
-  
-  // Card class
+
   const card = document.getElementById("card");
   card.className = `card rarity-${rarity}${shiny ? ' is-shiny' : ''}`;
-  
-  // Border gradient
   const inner = document.getElementById("cardInner");
   inner.style.setProperty("--rarity-gradient", rc.gradient);
   inner.classList.remove("pop");
-  void inner.offsetWidth; // reflow
+  void inner.offsetWidth;
   inner.classList.add("pop");
-  
-  // Rarity badge
+
   const badge = document.getElementById("rarityBadge");
   badge.textContent = `${RARITY_STARS[rarity]} ${rarity.toUpperCase()}`;
   badge.style.color = rc.color;
-  
-  // Species
   document.getElementById("speciesBadge").textContent = species.toUpperCase();
-  
-  // Shiny
+
   const shinyEl = document.getElementById("shinyBadge");
   shinyEl.style.display = shiny ? "block" : "none";
   shinyEl.style.color = "#fab387";
-  
-  // ASCII art
+
   let artLines = BODIES[species].map(l => l.replaceAll("{E}", eye));
-  if (hat !== "none" && HAT_LINES[hat]) {
-    artLines = [HAT_LINES[hat], ...artLines];
-  }
+  if (hat !== "none" && HAT_LINES[hat]) artLines = [HAT_LINES[hat], ...artLines];
   document.getElementById("asciiArt").textContent = artLines.join("\n");
-  
-  // Name & personality
+
   document.getElementById("petName").textContent = name;
   document.getElementById("petName").style.color = rarity === "legendary" ? "#f9e2af" : "#fff";
   document.getElementById("petPersonality").textContent = personality ? `"${personality}"` : "";
-  
-  // Stats - terminal block style
+
   const statsEl = document.getElementById("statsContainer");
   statsEl.innerHTML = "";
   const BAR_SLOTS = 20;
   for (const [stat, value] of Object.entries(stats)) {
-    const isPeak = stat === peak;
-    const isDump = stat === dump;
+    const isPeak = stat === peak, isDump = stat === dump;
     const filled = Math.round(BAR_SLOTS * value / 100);
     const empty = BAR_SLOTS - filled;
     const barColor = isPeak ? rc.color : isDump ? "#585b70" : "#6c7086";
     const labelColor = isPeak ? rc.color : isDump ? "#585b70" : "#a6adc8";
     const valueColor = isPeak ? rc.color : "#cdd6f4";
     const bar = "\u2588".repeat(filled) + "\u2591".repeat(empty);
-    
-    statsEl.innerHTML += `
-      <div class="stat-row">
-        <span class="stat-label" style="color:${labelColor}">${stat}</span>
-        <span class="stat-bar" style="color:${barColor}">${bar}</span>
-        <span class="stat-value" style="color:${valueColor}">${String(value).padStart(3)}</span>
-      </div>
-    `;
+    statsEl.innerHTML += `<div class="stat-row"><span class="stat-label" style="color:${labelColor}">${stat}</span><span class="stat-bar" style="color:${barColor}">${bar}</span><span class="stat-value" style="color:${valueColor}">${String(value).padStart(3)}</span></div>`;
   }
-  
-  // Footer
-  document.getElementById("cardFooter").textContent = 
-    `eye:${EYES_MAP[eye]||eye} · hat:${hat}${shiny?" · SHINY":""} · ${RARITY_WEIGHTS[rarity]}% chance`;
+
+  document.getElementById("cardFooter").textContent = `eye:${EYES_MAP[eye]||eye} · hat:${hat}${shiny?" · SHINY":""} · ${RARITY_WEIGHTS[rarity]}% chance`;
 }
 
 let currentData = null;
 
 function generateCard() {
   const form = getFormData();
-  const rng = mulberry32(Math.random() * 0xFFFFFFFF >>> 0);
+  const rng = makePRNG(Math.random() * 0xFFFFFFFF >>> 0);
   const { stats, peak, dump } = rollStats(rng, form.rarity);
   currentData = { ...form, stats, peak, dump };
   renderCard(currentData);
 }
 
 function randomRoll() {
-  const rng = mulberry32(Math.random() * 0xFFFFFFFF >>> 0);
+  const rng = makePRNG(Math.random() * 0xFFFFFFFF >>> 0);
   const rarity = rollRarity(rng);
   const species = pick(rng, SPECIES);
   const eye = pick(rng, EYES);
   const hat = rarity === "common" ? "none" : pick(rng, HATS);
   const shiny = rng() < 0.01;
   const { stats, peak, dump } = rollStats(rng, rarity);
-  
   currentData = { rarity, species, eye, hat, shiny, stats, peak, dump };
-  
   document.getElementById("name").value = DEFAULT_NAMES[species] || "";
   document.getElementById("personality").value = DEFAULT_PERSONALITIES[species] || "";
   setFormData(currentData);
@@ -788,10 +742,8 @@ function randomRoll() {
 
 function seedRoll() {
   const seed = document.getElementById("seed").value.trim();
-  if (!seed) { alert("Please enter a seed (userId)"); return; }
-  
+  if (!seed) { alert("Please enter a seed (accountUuid or userID)"); return; }
   currentData = rollFromSeed(seed);
-  
   document.getElementById("name").value = DEFAULT_NAMES[currentData.species] || "";
   document.getElementById("personality").value = DEFAULT_PERSONALITIES[currentData.species] || "";
   setFormData(currentData);
@@ -800,16 +752,10 @@ function seedRoll() {
 
 async function downloadCard() {
   if (!currentData) { alert("Generate a card first!"); return; }
-  const d = currentData;
-  const petName = document.getElementById("name").value || DEFAULT_NAMES[d.species] || "Unnamed";
-  const personality = document.getElementById("personality").value || DEFAULT_PERSONALITIES[d.species] || "";
-  const rc = RARITY_COLORS[d.rarity];
-
-  // Screenshot the DOM card directly for pixel-perfect output
+  const petName = document.getElementById("name").value || DEFAULT_NAMES[currentData.species] || "Unnamed";
   try {
     const { domToPng } = await import("https://cdn.jsdelivr.net/npm/modern-screenshot@4.4.39/+esm");
-    const cardEl = document.getElementById("card");
-    const dataUrl = await domToPng(cardEl, { scale: 2 });
+    const dataUrl = await domToPng(document.getElementById("card"), { scale: 2 });
     const link = document.createElement("a");
     link.download = `buddy_${petName.toLowerCase().replace(/\s+/g,"_")}.png`;
     link.href = dataUrl;
@@ -819,9 +765,7 @@ async function downloadCard() {
   }
 }
 
-// Init
 initControls();
-// Default: show a legendary axolotl
 document.getElementById("species").value = "axolotl";
 document.getElementById("eye").value = "@";
 document.getElementById("hat").value = "wizard";
